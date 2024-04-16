@@ -19,4 +19,5 @@ class Controller:
 
         tabella = Daily_sales_DAO().get_migliori(anno, brand, retailer)
         for i in tabella:
-            self._view.stampa.controls.append(ft.Text(f"Data: {i[0]}, Ricavo: {i[1]}, R"))
+            self._view.stampa.controls.append(ft.Text(f"Data: {i[0]}, Ricavo: {i[1]}, Retailer: {i[2]}, Product: {i[3]}"))
+        self._view.update_page()
