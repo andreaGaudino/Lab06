@@ -38,5 +38,20 @@ class Daily_sales_DAO:
         cnx.close()
         return tabella
 
+    def get_anno(self):
+        cnx = DB_connect.DBConnect.get_connection()
+        cursor = cnx.cursor()
+        query = """SELECT YEAR(Date)
+                    FROM go_daily_sales"""
+        cursor.execute(query)
+        tabella = []
+        for i in cursor:
+            if i not in tabella:
+                tabella.append(i)
+        cursor.close()
+        cnx.close()
+        return tabella
+
+
 
 

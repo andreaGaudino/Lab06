@@ -82,9 +82,9 @@ class View(ft.UserControl):
         self._page.update()
 
     def popola_lista_anno(self):
-        tabella = Daily_sales_DAO().get_daily_sales()
+        tabella = Daily_sales_DAO().get_anno()
         self.lista_anno.options.append(ft.dropdown.Option(text="Nessun filtro"))
         for elem in tabella:
-            self.lista_anno.options.append(ft.dropdown.Option(text=elem.date))
+            self.lista_anno.options.append(ft.dropdown.Option(text=elem[0]))
         self._page.update()
 
