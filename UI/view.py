@@ -26,6 +26,7 @@ class View(ft.UserControl):
         # title
         self._title = ft.Text("Analizza vendite", color="blue", size=24)
         self._page.controls.append(self._title)
+        self.stampa = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
 
         #ROW 1
         self.lista_anno = ft.Dropdown(label="Anno")
@@ -37,11 +38,11 @@ class View(ft.UserControl):
         self.popola_lista_anno()
         row1 = ft.Row([self.lista_anno, self.lista_brand, self.lista_retailer], alignment=ft.MainAxisAlignment.CENTER)
 
-        self.btn_topVendite = ft.ElevatedButton(text="Top vendite")
+        self.btn_topVendite = ft.ElevatedButton(text="Top vendite", on_click=self._controller.handleTopVendite)
         self.btn_analizzaVendite = ft.ElevatedButton(text="Analizza vendite")
         row2 = ft.Row([self.btn_topVendite, self.btn_analizzaVendite], alignment=ft.MainAxisAlignment.CENTER)
 
-        self._page.add(row1, row2)
+        self._page.add(row1, row2, self.stampa)
         self._page.update()
 
 
@@ -71,7 +72,7 @@ class View(ft.UserControl):
         tabella = Product_DAO().get_product()
         self.lista_brand.options.append(ft.dropdown.Option(text="Nessun filtro"))
         for elem in tabella:
-            self.lista_brand.options.append(ft.dropdown.Option(key=elem.product_number, text=elem.product))
+            self.lista_brand.options.append(ft.dropdown.Option(key=elem.product_brand, text=elem.product))
         self._page.update()
 
     def popola_lista_retailers(self):
@@ -85,6 +86,6 @@ class View(ft.UserControl):
         tabella = Daily_sales_DAO().get_anno()
         self.lista_anno.options.append(ft.dropdown.Option(text="Nessun filtro"))
         for elem in tabella:
-            self.lista_anno.options.append(ft.dropdown.Option(text=elem[0]))
+            self.lista_anno.options.append(ft.dropdown.Option(text=elem[0], key=elem[0]))
         self._page.update()
 
