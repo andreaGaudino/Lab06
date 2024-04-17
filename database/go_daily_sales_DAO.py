@@ -46,8 +46,8 @@ class Daily_sales_DAO:
         cursor.execute(query)
         tabella = []
         for i in cursor:
-            if i not in tabella:
-                tabella.append(i)
+            if i[0] not in tabella:
+                tabella.append(i[0])
         cursor.close()
         cnx.close()
         return tabella
@@ -62,17 +62,18 @@ class Daily_sales_DAO:
                     inner join go_sales.go_retailers gr 
                     on gds.Retailer_code = gr.Retailer_code 
                     WHERE  gds.Retailer_code = %s and year(gds.Date)= %s and gp.Product_brand = %s
-                    group by gds.`Date` 
+                    group by gds.Date
                     order by Ricavo desc 
                     limit 5
                     """
-        cursor.execute(query, (anno, brand, retailer))
-        tabella = []
-        for i in cursor:
-            tabella.append([i[0], i[1], i[2], i[3]])
+        cursor.execute(query, (retailer, anno, brand))
+        results = cursor.fetchall()
+        #tabella = []
+        #for i in cursor:
+         #   tabella.append([i[0], i[1], i[2], i[3]])
         cursor.close()
         cnx.close()
-        return tabella
+        return results
 
 
 
