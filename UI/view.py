@@ -39,7 +39,7 @@ class View(ft.UserControl):
         row1 = ft.Row([self.lista_anno, self.lista_brand, self.lista_retailer], alignment=ft.MainAxisAlignment.CENTER)
 
         self.btn_topVendite = ft.ElevatedButton(text="Top vendite", on_click=self._controller.handleTopVendite)
-        self.btn_analizzaVendite = ft.ElevatedButton(text="Analizza vendite")
+        self.btn_analizzaVendite = ft.ElevatedButton(text="Analizza vendite", on_click=self._controller.handleAnalizzaVendite)
         row2 = ft.Row([self.btn_topVendite, self.btn_analizzaVendite], alignment=ft.MainAxisAlignment.CENTER)
 
         self._page.add(row1, row2, self.stampa)

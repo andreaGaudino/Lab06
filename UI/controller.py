@@ -21,4 +21,20 @@ class Controller:
         for i in tabella:
             self._view.stampa.controls.append(ft.Text(f"Data: {i[0]}, Ricavo: {i[1]}, Retailer: {i[2]}, Product: {i[3]}"))
         self._view.update_page()
-        
+
+    def handleAnalizzaVendite(self, e):
+        anno = self._view.lista_anno.value
+        brand = self._view.lista_brand.value
+        retailer = self._view.lista_retailer.value
+        self._view.stampa.clean()
+        self._view.update_page()
+
+        tabella = Daily_sales_DAO().analizza_vendite(anno, brand, retailer)
+        for i in tabella:
+            self._view.stampa.controls.append(
+                ft.Text(f"Statistiche vendite\n"
+                        f"Giro d'affari: {i[0]}\n"
+                        f"Numero vendite: {i[1]}\n"
+                        f"Numero retailers coinvolti: {i[2]}\n"
+                        f"Numero prodotti coinvolti: {i[3]}"))
+        self._view.update_page()

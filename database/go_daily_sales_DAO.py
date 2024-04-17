@@ -74,7 +74,22 @@ class Daily_sales_DAO:
         cursor.close()
         cnx.close()
         return results
-
+    def analizza_vendite(self,anno, brand, retailer):
+        cnx = DB_connect.DBConnect.get_connection()
+        cursor = cnx.cursor()
+        query = """ select sum(gds.Quantity*gds.Unit_sale_price) as Ricavo, count(*),count(distinct gr.Retailer_code), count(distinct gp.Product_number) 
+                    FROM go_sales.go_daily_sales AS gds 
+                    INNER JOIN go_sales.go_products AS gp
+                    ON gds.Product_number = gp.Product_number
+                    inner join go_sales.go_retailers gr 
+                    on gds.Retailer_code = gr.Retailer_code 
+                    WHERE  gds.Retailer_code = %s and year(gds.Date) = %s and gp.Product_brand = %s
+                    """
+        cursor.execute(query, (retailer, anno, brand))
+        results = cursor.fetchall()
+        cursor.close()
+        cnx.close()
+        return results
 
 
 
