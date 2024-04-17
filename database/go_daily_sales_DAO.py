@@ -55,22 +55,50 @@ class Daily_sales_DAO:
     def get_migliori(self, anno, brand, retailer):
         cnx = DB_connect.DBConnect.get_connection()
         cursor = cnx.cursor()
-        query = """SELECT  gds.Date,sum(gds.Quantity*gds.Unit_sale_price) as Ricavo, gr.Retailer_code, gp.Product_number
-                    FROM go_sales.go_daily_sales AS gds 
-                    INNER JOIN go_sales.go_products AS gp
-                    ON gds.Product_number = gp.Product_number
-                    inner join go_sales.go_retailers gr 
-                    on gds.Retailer_code = gr.Retailer_code 
-                    WHERE  gds.Retailer_code = %s and year(gds.Date)= %s and gp.Product_brand = %s
-                    group by gds.Date
-                    order by Ricavo desc 
-                    limit 5
-                    """
-        cursor.execute(query, (retailer, anno, brand))
+        query = """
+            SELECT gds.Date, SUM(gds.Quantity * gds.Unit_sale_price) as Ricavo, gr.Retailer_code, gp.Product_number
+            FROM go_sales.go_daily_sales AS gds
+            INNER JOIN go_sales.go_products AS gp ON gds.Product_number = gp.Product_number
+            INNER JOIN go_sales.go_retailers AS gr ON gds.Retailer_code = gr.Retailer_code
+        """
+
+        # Costruzione della clausola WHERE in base ai valori dei parametri
+        where_clause = []
+        parameters = []
+
+        # Verifica e costruzione della clausola WHERE per il parametro Retailer_code
+        if retailer != 'Nessun filtro':
+            where_clause.append("gds.Retailer_code = %s")
+            parameters.append(retailer)
+
+        # Verifica e costruzione della clausola WHERE per il parametro Date (anno)
+        if anno != 'Nessun filtro':
+            where_clause.append("YEAR(gds.Date) = %s")
+            parameters.append(anno)
+
+        # Verifica e costruzione della clausola WHERE per il parametro Product_brand
+        if brand != 'Nessun filtro':
+            where_clause.append("gp.Product_brand = %s")
+            parameters.append(brand)
+
+        # Unione delle clausole WHERE (se presenti)
+        if where_clause:
+            query += " WHERE " + " AND ".join(where_clause)
+
+        # Aggiunta delle clausole GROUP BY, ORDER BY e LIMIT
+        query += """
+            GROUP BY gds.Date
+            ORDER BY Ricavo DESC
+            LIMIT 5
+        """
+
+        # Esecuzione dell'istruzione SQL con i parametri
+        cursor.execute(query, parameters)
+
+        # Recupero dei risultati
         results = cursor.fetchall()
-        #tabella = []
-        #for i in cursor:
-         #   tabella.append([i[0], i[1], i[2], i[3]])
+
+        # Chiusura del cursore e della connessione
         cursor.close()
         cnx.close()
         return results
@@ -83,9 +111,31 @@ class Daily_sales_DAO:
                     ON gds.Product_number = gp.Product_number
                     inner join go_sales.go_retailers gr 
                     on gds.Retailer_code = gr.Retailer_code 
-                    WHERE  gds.Retailer_code = %s and year(gds.Date) = %s and gp.Product_brand = %s
+                    
                     """
-        cursor.execute(query, (retailer, anno, brand))
+        # Costruzione della clausola WHERE in base ai valori dei parametri
+        where_clause = []
+        parameters = []
+
+        # Verifica e costruzione della clausola WHERE per il parametro Retailer_code
+        if retailer != 'Nessun filtro':
+            where_clause.append("gds.Retailer_code = %s")
+            parameters.append(retailer)
+
+        # Verifica e costruzione della clausola WHERE per il parametro Date (anno)
+        if anno != 'Nessun filtro':
+            where_clause.append("YEAR(gds.Date) = %s")
+            parameters.append(anno)
+
+        # Verifica e costruzione della clausola WHERE per il parametro Product_brand
+        if brand != 'Nessun filtro':
+            where_clause.append("gp.Product_brand = %s")
+            parameters.append(brand)
+
+        # Unione delle clausole WHERE (se presenti)
+        if where_clause:
+            query += " WHERE " + " AND ".join(where_clause)
+        cursor.execute(query, parameters)
         results = cursor.fetchall()
         cursor.close()
         cnx.close()

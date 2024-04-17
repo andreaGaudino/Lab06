@@ -16,6 +16,15 @@ class Controller:
         retailer = self._view.lista_retailer.value
         self._view.stampa.clean()
         self._view.update_page()
+        if anno is None:
+            self._view.create_alert("Nessun anno selezionato")
+            return
+        if brand is None:
+            self._view.create_alert("Nessun brand selezionato")
+            return
+        if retailer is None:
+            self._view.create_alert("Nessun retailer selezionato")
+            return
 
         tabella = Daily_sales_DAO().get_migliori(anno, brand, retailer)
         for i in tabella:
@@ -28,6 +37,17 @@ class Controller:
         retailer = self._view.lista_retailer.value
         self._view.stampa.clean()
         self._view.update_page()
+        if anno is None:
+            self._view.create_alert("Nessun anno selezionato")
+            return
+        if brand is None:
+            self._view.create_alert("Nessun brand selezionato")
+            return
+        if retailer is None:
+            self._view.create_alert("Nessun retailer selezionato")
+            return
+
+
 
         tabella = Daily_sales_DAO().analizza_vendite(anno, brand, retailer)
         for i in tabella:

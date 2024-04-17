@@ -71,8 +71,12 @@ class View(ft.UserControl):
     def popola_lista_brand(self):
         tabella = Product_DAO().get_product()
         self.lista_brand.options.append(ft.dropdown.Option(text="Nessun filtro"))
+        tab_pulita = []
         for elem in tabella:
-            self.lista_brand.options.append(ft.dropdown.Option(key=elem.product_brand, text=elem.product_brand))
+            if elem.product_brand not in tab_pulita:
+                tab_pulita.append(elem.product_brand)
+        for i in tab_pulita:
+            self.lista_brand.options.append(ft.dropdown.Option(key=i, text=i))
         self._page.update()
 
     def popola_lista_retailers(self):
@@ -88,4 +92,6 @@ class View(ft.UserControl):
         for elem in tabella:
             self.lista_anno.options.append(ft.dropdown.Option(text=elem, key=elem))
         self._page.update()
+
+
 
